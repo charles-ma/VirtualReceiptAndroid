@@ -112,7 +112,6 @@ public class ReceiptEntryActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		isAddClicked = false;
-		
 		/*initialize categoryList as follows*/
 		if(categoryList == null){
 			categoryList = new ArrayList<String>(Arrays.asList("Education","Grocery","Clothing", "Rent", "Bill", "Resteraunt", "Recreation", "Others"));

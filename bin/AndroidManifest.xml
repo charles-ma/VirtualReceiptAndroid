@@ -35,7 +35,7 @@
         </activity>
         
         <activity
-            android:name=".eas499.ImageViewActivityctivity"
+            android:name=".eas499.ImageViewActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -55,7 +55,7 @@
         </activity>
         
         <activity
-            android:name = ".eas499.ReceiptEntryActivitytEntryActivity"
+            android:name = ".eas499.ReceiptEntryActivity"
             android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_name" >
@@ -84,7 +84,7 @@
         
         <activity 
             android:label="@string/app_name" 
-            android:name = ".eas499.CategoriesListActivityesListActivity" >
+            android:name = ".eas499.CategoriesListActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.PICK" />
@@ -99,7 +99,7 @@
         </activity>
         <activity 
             android:label="@string/app_name" 
-            android:name = ".eas499.ChartViewerActivityViewerActivity" >
+            android:name = ".eas499.ChartViewerActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />

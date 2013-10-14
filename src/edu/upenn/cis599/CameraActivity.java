@@ -45,12 +45,12 @@ public class CameraActivity extends Activity {
 		
 		if(preview.camera != null)
 			CameraUtil.setCameraDisplayOrientation(this, CameraInfo.CAMERA_FACING_BACK, preview.camera);
-	    buttonClick = (Button) findViewById(R.id.buttonClick);
-	    buttonClick.setOnClickListener(new OnClickListener() {
-	    	public void onClick(View v) { 
+		buttonClick = (Button) findViewById(R.id.buttonClick);
+		buttonClick.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) { 
 	    		preview.camera.takePicture(shutterCallback, rawCallback, jpegCallback);
-	    	}
-	    });
+			}
+		});
 
 	    Log.d(TAG, "onCreate'd");
 	}
@@ -89,6 +89,7 @@ public class CameraActivity extends Activity {
 			} catch (IOException e) {
 				e.printStackTrace();
 			} finally {
+				
 			}
 			Log.d(TAG, "onPictureTaken - jpeg");
 		}

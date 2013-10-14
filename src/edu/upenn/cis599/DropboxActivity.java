@@ -34,7 +34,7 @@ import edu.upenn.cis599.eas499.ReceiptDbAdapter;
 
 
 public class DropboxActivity extends Activity {
-    private static final String TAG = "DropboxActivity";
+	private static final String TAG = "DropboxActivity";
 
     ///////////////////////////////////////////////////////////////////////////
     //                       app-specific settings.                          //
@@ -49,7 +49,8 @@ public class DropboxActivity extends Activity {
 
     // If you'd like to change the access type to the full Dropbox instead of
     // an app folder, change this value.
-    final static private AccessType ACCESS_TYPE = AccessType.APP_FOLDER;
+    // This statement will lead to failure
+    //final static private AccessType ACCESS_TYPE = AccessType.APP_FOLDER;
 
     ///////////////////////////////////////////////////////////////////////////
     //                      End app-specific settings.                       //
@@ -63,7 +64,7 @@ public class DropboxActivity extends Activity {
 
     DropboxAPI<AndroidAuthSession> mApi;
 
-    private boolean mLoggedIn;
+	private boolean mLoggedIn;
 
     // Android widgets
     private Button mSubmit;
@@ -77,9 +78,8 @@ public class DropboxActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         // We create a new AuthSession so that we can use the Dropbox API.
-        AndroidAuthSession session = buildSession();
+        /*AndroidAuthSession session = buildSession();
         mApi = new DropboxAPI<AndroidAuthSession>(session);
 
         // Basic Android widgets
@@ -137,7 +137,7 @@ public class DropboxActivity extends Activity {
 
         // Display the proper UI state if logged in or not
         setLoggedIn(mApi.getSession().isLinked());
-
+*/
     }
 
     @Override
@@ -148,7 +148,7 @@ public class DropboxActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        AndroidAuthSession session = mApi.getSession();
+        /*AndroidAuthSession session = mApi.getSession();
 
         // The next part must be inserted in the onResume() method of the
         // activity from which session.startAuthentication() was called, so
@@ -166,10 +166,10 @@ public class DropboxActivity extends Activity {
                 showToast("Couldn't authenticate with Dropbox:" + e.getLocalizedMessage());
                 Log.i(TAG, "Error authenticating", e);
             }
-        }
+        }*/
     }
 
-    private void logOut() {
+    /*private void logOut() {
         // Remove credentials from the session
         mApi.getSession().unlink();
 
@@ -177,12 +177,12 @@ public class DropboxActivity extends Activity {
         clearKeys();
         // Change UI state to display logged out version
         setLoggedIn(false);
-    }
+    }*/
 
     /**
      * Convenience function to change UI state based on being logged in
      */
-    private void setLoggedIn(boolean loggedIn) {
+    /*private void setLoggedIn(boolean loggedIn) {
     	mLoggedIn = loggedIn;
     	if (loggedIn) {
     		mSubmit.setText("Unlink from Dropbox");
@@ -221,7 +221,7 @@ public class DropboxActivity extends Activity {
     private void showToast(String msg) {
         Toast error = Toast.makeText(this, msg, Toast.LENGTH_LONG);
         error.show();
-    }
+    }*/
 
     /**
      * Shows keeping the access keys returned from Trusted Authenticator in a local
@@ -230,7 +230,8 @@ public class DropboxActivity extends Activity {
      *
      * @return Array of [access_key, access_secret], or null if none stored
      */
-    private String[] getKeys() {
+    
+    /*private String[] getKeys() {
         SharedPreferences prefs = getSharedPreferences(ACCOUNT_PREFS_NAME, 0);
         String key = prefs.getString(ACCESS_KEY_NAME, null);
         String secret = prefs.getString(ACCESS_SECRET_NAME, null);
@@ -242,14 +243,14 @@ public class DropboxActivity extends Activity {
         } else {
         	return null;
         }
-    }
+    }*/
 
     /**
      * Shows keeping the access keys returned from Trusted Authenticator in a local
      * store, rather than storing user name & password, and re-authenticating each
      * time (which is not to be done, ever).
      */
-    private void storeKeys(String key, String secret) {
+    /*private void storeKeys(String key, String secret) {
         // Save the access key for later
         SharedPreferences prefs = getSharedPreferences(ACCOUNT_PREFS_NAME, 0);
         Editor edit = prefs.edit();
@@ -278,5 +279,5 @@ public class DropboxActivity extends Activity {
         }
 
         return session;
-    }
+    }*/
 }

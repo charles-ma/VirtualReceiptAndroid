@@ -10,9 +10,11 @@ import edu.upenn.cis599.R;
 import edu.upenn.cis599.R.array;
 import edu.upenn.cis599.R.layout;
 import edu.upenn.cis599.charts.StatisticsViewerActivity;
+import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -34,7 +36,8 @@ public class VirtualReceiptActivity extends ListActivity {
         String[] menuItems = getResources().getStringArray(R.array.menu_items);
         setListAdapter(new ArrayAdapter<String>(this, R.layout.main_item, menuItems));
         ListView lv = getListView();
-        lv.setOnItemClickListener(new OnItemClickListener() {
+        lv.setOnItemClickListener(new MyListener(this));
+        /*lv.setOnItemClickListener(new OnItemClickListener() {
         	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         		String label = ((TextView) view).getText().toString();
         		Intent intent;
@@ -50,14 +53,13 @@ public class VirtualReceiptActivity extends ListActivity {
         			intent = new Intent(getApplicationContext(), StatisticsViewerActivity.class);
         			startActivity(intent);
         		}else if (label.equals("Sync with dropbox")) {
-        			
-        			/*Yiran Qin Dropbox activity to handle all front-end data sharing feature*/
         			intent = new Intent(getApplicationContext(), DropboxActivity.class);
         			startActivity(intent);
         		}
         	}
-        });
+        });*/
         
+                
         /**
          * Yiran Qin
          * Original attempt to achieve data sharing feature using parse.com database instance
@@ -67,4 +69,38 @@ public class VirtualReceiptActivity extends ListActivity {
 //        testObject.put("foo", "bar");
 //        testObject.saveInBackground();
     }
+    
+    class MyListener implements OnItemClickListener {
+
+    	private Activity p = null;
+    	
+    	public MyListener(Activity a) {
+    		p = a;
+    	}
+    	
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position,
+				long id) {
+			String label = ((TextView) view).getText().toString();
+			Intent intent;
+    		if (label.equals("Add a receipt")) {
+    			intent = new Intent(p, ReceiptEntryActivity.class);
+    			startActivity(intent);
+    		}
+    		else if (label.equals("View receipts")) {
+    			intent = new Intent(p, ReceiptsListActivity.class);
+    			startActivity(intent);
+    		}
+    		else if (label.equals("View spending statistics")) {
+    			intent = new Intent(p, StatisticsViewerActivity.class);
+    			startActivity(intent);
+    		}else if (label.equals("Sync with dropbox")) {
+    			/*Yiran Qin Dropbox activity to handle all front-end data sharing feature*/
+    			intent = new Intent(p, DropboxActivity.class);
+    			startActivity(intent);
+    		}
+		}
+    	
+    }
+
 }
