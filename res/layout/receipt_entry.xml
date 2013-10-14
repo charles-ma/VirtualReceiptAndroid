@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/description" />
+    
+    <EditText android:id="@+id/description"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text" />
+	    
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+      
+        <TextView
+        	android:layout_width="0dip"
+        	android:layout_height="wrap_content"
+        	android:layout_weight="1"
+        	android:text="@string/amount" />
+          
+        <TextView
+            android:layout_width="0dip"
+        	android:layout_height="wrap_content"
+        	android:layout_weight="1"
+        	android:text="@string/date" />
+            
+	</LinearLayout>
+	
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+            
+        <EditText android:id="@+id/amount"
+        	android:layout_width="0dip"
+	      	android:layout_height="wrap_content"
+	      	android:layout_weight="1"
+	       	android:inputType="numberDecimal" />
+         
+        <EditText android:id="@+id/date"
+       		android:layout_width="0dip"
+	      	android:layout_height="wrap_content"
+	      	android:layout_weight="1"
+       		android:inputType="date" />
+
+    </LinearLayout>
+    
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/category" />
+
+    <Spinner
+        android:id="@+id/category"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:prompt="@string/choose_category" />
+    
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/payment_method" />
+    
+    <RadioGroup
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      android:id="@+id/payment">
+      
+      <RadioButton android:id="@+id/radio_cash"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/cash" />
+      
+      <RadioButton android:id="@+id/radio_credit"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/credit" />
+      
+      <RadioButton android:id="@+id/radio_debit"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/debit" />
+    
+    </RadioGroup>
+    
+    <LinearLayout 
+	    android:orientation="horizontal"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content" >
+	    
+	    <Button android:id="@+id/save"
+	        android:text="@string/save"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:onClick="onSaveButtonClick" />
+	    
+	    <Button android:id="@+id/clear"
+	        android:text="@string/clear"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:onClick="onClearButtonClick" />
+	
+	</LinearLayout>
+	
+</LinearLayout>
