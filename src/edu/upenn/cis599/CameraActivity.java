@@ -30,8 +30,8 @@ public class CameraActivity extends Activity {
 	private static final String DATA_PATH = Environment
 			.getExternalStorageDirectory().toString() + "/VirtualReceipt/";
 	private String _path = new String(DATA_PATH + "/ocr.jpg");
-	Preview preview; 
-	Button buttonClick; 
+	private Preview preview; 
+	private Button buttonClick; 
 	
 
 	/** Called when the activity is first created. */
@@ -48,7 +48,7 @@ public class CameraActivity extends Activity {
 		buttonClick = (Button) findViewById(R.id.buttonClick);
 		buttonClick.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) { 
-	    		preview.camera.takePicture(shutterCallback, rawCallback, jpegCallback);
+				preview.camera.takePicture(shutterCallback, rawCallback, jpegCallback);
 			}
 		});
 

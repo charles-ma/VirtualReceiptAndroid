@@ -5,8 +5,6 @@
 package edu.upenn.cis599.eas499;
 
 import java.io.ByteArrayOutputStream;
-
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -20,12 +18,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import edu.upenn.cis599.CameraActivity;
 import edu.upenn.cis599.FinishListener;
 import edu.upenn.cis599.R;
 import edu.upenn.cis599.R.id;
 import edu.upenn.cis599.R.layout;
-
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -138,7 +135,7 @@ public class ReceiptEntryActivity extends Activity {
 				//captureImage();
 				try{
 					isAddClicked = !isAddClicked;
-					if(isAddClicked){						
+					if(isAddClicked){		
 						captureTime = System.currentTimeMillis();	
 						Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
 						mImageCaptureUri = Uri.fromFile(imageFile);
@@ -146,13 +143,13 @@ public class ReceiptEntryActivity extends Activity {
 						cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageCaptureUri);
 //						cameraIntent.putExtra(MediaStore.EXTRA_SCREEN_ORIENTATION, ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 						startActivityForResult(cameraIntent, CAMERA_REQUEST);
-//						Intent cameraIntent = new Intent(getApplicationContext(), CameraActivity.class);
-//						startActivityForResult(cameraIntent, CAMERA_REQUEST);
-					}
+						//Intent cameraIntent = new Intent(getApplicationContext(), CameraActivity.class);
+						//startActivityForResult(cameraIntent, CAMERA_REQUEST);
+					} 
 				} catch (RuntimeException e) {
-			      // Barcode Scanner has seen crashes in the wild of this variety:
-			      // java.?lang.?RuntimeException: Fail to connect to camera service
-			      showErrorMessage("Error", "Could not initialize camera. Please try restarting device.");
+					// Barcode Scanner has seen crashes in the wild of this variety:
+					// java.?lang.?RuntimeException: Fail to connect to camera service
+					showErrorMessage("Error", "Could not initialize camera. Please try restarting device.");
 			    }
 			}
 		});
@@ -161,6 +158,8 @@ public class ReceiptEntryActivity extends Activity {
 			@Override
 			public void onClick(DialogInterface dialog, int whichButton) {
 				// Insert empty image into db.
+				//Intent vr = new Intent(getApplicationContext(), VirtualReceiptActivity.class);
+				//startActivity(vr);
 				loadForm();
 			}
 		});
