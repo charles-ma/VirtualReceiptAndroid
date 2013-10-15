@@ -137,7 +137,7 @@ public class ImageOCRActivity extends Activity {
 			if (mBitmap.getWidth() > mBitmap.getHeight()) {
 				Matrix m = new Matrix();
 				m.postRotate(90);
-				mBitmap = Bitmap.createBitmap(mBitmap , 0, 0, mBitmap .getWidth(), mBitmap .getHeight(), m, true);
+				mBitmap = Bitmap.createBitmap(mBitmap , 0, 0, mBitmap.getWidth(), mBitmap.getHeight(), m, true).copy(Bitmap.Config.ARGB_8888, true);
 			}
 			imageBitmap.recycle();
 		}

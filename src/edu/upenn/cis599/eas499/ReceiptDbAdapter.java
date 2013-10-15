@@ -242,7 +242,9 @@ public class ReceiptDbAdapter {
     public String getMostlyUsedPayment(){
     	HashMap<String, Double> paymentSum = retrieveDataByPayment(2);
     	ArrayList<String> sortedPayment = sortByValue(paymentSum);
-    	return sortedPayment.get(0);
+    	if (sortedPayment.size() != 0)
+    		return sortedPayment.get(0);
+    	return "";
     }
     
     public static ArrayList<String> sortByValue(Map<String, Double> map) {
