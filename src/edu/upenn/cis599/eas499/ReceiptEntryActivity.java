@@ -232,6 +232,37 @@ public class ReceiptEntryActivity extends Activity {
 		imageFile = new File(_path);
 	}
 
+	public void rotatePhoto() {
+		BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
+		bitmapOptions.inSampleSize = 6;
+		Bitmap photo = BitmapFactory.decodeFile(_path, bitmapOptions);
+		
+//		Bitmap photo = CameraUtil.decodeFile(getApplicationContext(), _path);
+		ExifInterface exif = null;
+		try {
+			exif = new ExifInterface(_path);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		if (exif != null) {
+			Log.d("Rotation Tag", "This" + exif.getAttribute(ExifInterface.TAG_ORIENTATION));
+			if(exif.getAttribute(ExifInterface.TAG_ORIENTATION).equalsIgnoreCase("6")){
+				photo = rotate(photo, 90);
+			}else if(exif.getAttribute(ExifInterface.TAG_ORIENTATION).equalsIgnoreCase("8")){
+				photo = rotate(photo, 270);
+			}else if(exif.getAttribute(ExifInterface.TAG_ORIENTATION).equalsIgnoreCase("3")){
+				photo = rotate(photo, 180);
+			} else {
+				photo = rotate(photo, 90);
+			}
+			
+			ByteArrayOutputStream outputStream = new ByteArrayOutputStream(); 
+			photo.compress(CompressFormat.PNG, 0, outputStream);
+			mImage = outputStream.toByteArray();										
+			photo.recycle();
+		}
+	}
+	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data){  
 		//super.onActivityResult(requestCode, resultCode, data);
@@ -264,24 +295,24 @@ public class ReceiptEntryActivity extends Activity {
 					}
 					Log.e(TAG, "The final rotation is " + rotation);
 					
+					rotatePhoto();
 					
-					BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
+					/*BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
 					bitmapOptions.inSampleSize = 6;
 					Bitmap photo = BitmapFactory.decodeFile(_path, bitmapOptions);
 					
-
-					
 //					Bitmap photo = CameraUtil.decodeFile(getApplicationContext(), _path);
-//					ExifInterface exif = new ExifInterface(_path);
-//					Log.d("Rotation Tag", exif.getAttribute(ExifInterface.TAG_ORIENTATION));
-//					if(exif.getAttribute(ExifInterface.TAG_ORIENTATION).equalsIgnoreCase("6")){
-//
-//						photo = rotate(photo, 90);
-//					}else if(exif.getAttribute(ExifInterface.TAG_ORIENTATION).equalsIgnoreCase("8")){
-//						photo = rotate(photo, 270);
-//					}else if(exif.getAttribute(ExifInterface.TAG_ORIENTATION).equalsIgnoreCase("3")){
-//						photo = rotate(photo, 180);
-//					}
+					ExifInterface exif = new ExifInterface(_path);
+					Log.d("Rotation Tag", "This" + exif.getAttribute(ExifInterface.TAG_ORIENTATION));
+					if(exif.getAttribute(ExifInterface.TAG_ORIENTATION).equalsIgnoreCase("6")){
+						photo = rotate(photo, 90);
+					}else if(exif.getAttribute(ExifInterface.TAG_ORIENTATION).equalsIgnoreCase("8")){
+						photo = rotate(photo, 270);
+					}else if(exif.getAttribute(ExifInterface.TAG_ORIENTATION).equalsIgnoreCase("3")){
+						photo = rotate(photo, 180);
+					} else {
+						photo = rotate(photo, 90);
+					}
 					
 					ByteArrayOutputStream outputStream = new ByteArrayOutputStream(); 
 					photo.compress(CompressFormat.PNG, 0, outputStream);
@@ -289,7 +320,7 @@ public class ReceiptEntryActivity extends Activity {
 					photo.recycle();
 					//mImage = getBitmapAsByteArray(photo);
 					if(mImage == null)
-						showErrorMessage("Error", "Decoding Bitmap Error.");
+						showErrorMessage("Error", "Decoding Bitmap Error.");*/
 					
 				}catch(Exception e){
 					showErrorMessage("Error", "Decoding Bitmap Error.");				
@@ -327,9 +358,14 @@ public class ReceiptEntryActivity extends Activity {
 	    int h = bitmap.getHeight();
 
 	    Matrix mtx = new Matrix();
-	    mtx.postRotate(degree);
-
-	    return Bitmap.createBitmap(bitmap, 0, 0, w, h, mtx, true);
+	    mtx.postRotate(degree, w / 2, h / 2);
+	    Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, w, h, true);
+	    Log.v("map", "a" + w + h);
+	    
+	    Bitmap result = Bitmap.createBitmap(scaledBitmap , 0, 0, scaledBitmap .getWidth(), scaledBitmap .getHeight(), mtx, true);
+	    Log.v("map", "b" + result.getWidth() + result.getHeight());
+	    return result;
+//	    return Bitmap.createBitmap(bitmap, 0, 0, w, h, mtx, true);
 	}
 
 	private void launchSelection() {
@@ -504,6 +540,7 @@ public class ReceiptEntryActivity extends Activity {
 			saveState(null);
 			setResult(RESULT_OK);
 			finish();
+			//rotatePhoto();
 		}
 	}
 

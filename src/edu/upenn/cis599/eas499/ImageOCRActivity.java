@@ -10,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -20,6 +21,7 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.hardware.Camera;
 import android.os.Bundle;
@@ -115,7 +117,7 @@ public class ImageOCRActivity extends Activity {
 			try{
 				BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
 				bitmapOptions.inSampleSize = 6;
-				Bitmap photo = BitmapFactory.decodeFile(_path, bitmapOptions);
+				Bitmap photo = BitmapFactory.decodeFile(_path, bitmapOptions);	
 				ByteArrayOutputStream outputStream = new ByteArrayOutputStream(); 
 				photo.compress(CompressFormat.PNG, 0, outputStream);
 				photo.recycle();
@@ -132,6 +134,11 @@ public class ImageOCRActivity extends Activity {
 		if (imageByteArray != null) {
 			Bitmap imageBitmap = BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.length);
 			mBitmap = imageBitmap.copy(Bitmap.Config.ARGB_8888, true);
+			if (mBitmap.getWidth() > mBitmap.getHeight()) {
+				Matrix m = new Matrix();
+				m.postRotate(90);
+				mBitmap = Bitmap.createBitmap(mBitmap , 0, 0, mBitmap .getWidth(), mBitmap .getHeight(), m, true);
+			}
 			imageBitmap.recycle();
 		}
 		else {
@@ -143,7 +150,6 @@ public class ImageOCRActivity extends Activity {
 			alert.setTitle("Select Total Amount and Description");
 			alert.setMessage("Please select the region for the total amount first and then select region for description.");
 			alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-
 				@Override
 				public void onClick(DialogInterface dialog, int whichButton) {
 					selectRegion();
@@ -222,13 +228,15 @@ public class ImageOCRActivity extends Activity {
 	
 				String recognizedAmount = baseApi.getUTF8Text();
 				if(recognizedAmount == null || recognizedAmount.equals(""))
-					throw new RuntimeException("error recognizing amount");
+					//throw new RuntimeException("error recognizing amount");
+					Log.v("result", "can't recognize");
 				
 				baseApi.setVariable(TessBaseAPI.VAR_CHAR_WHITELIST, WHITELIST);
 				baseApi.setRectangle(descRect);
 				String recognizedDesc = baseApi.getUTF8Text();
 				if(recognizedDesc == null || recognizedAmount.equals(""))
-					throw new RuntimeException("error recognizing description");
+					//throw new RuntimeException("error recognizing description");
+					Log.v("result", "can't recognize");
 				
 				baseApi.clear();
 				baseApi.end();

@@ -8,6 +8,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
@@ -60,6 +61,8 @@ public class MyView extends View {
 	
 	@Override
 	protected void onDraw(Canvas canvas) {
+		//Matrix m = new Matrix();
+		//m.postRotate(90, mBitmap.getWidth() / 2, mBitmap.getHeight() / 2);
 		canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);
 		if(amountRect != null)
 			canvas.drawRect(amountRect.left, amountRect.top, amountRect.right, amountRect.bottom, mPaint);
