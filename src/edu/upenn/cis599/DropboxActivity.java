@@ -6,6 +6,7 @@ package edu.upenn.cis599;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -108,18 +109,29 @@ public class DropboxActivity extends Activity {
 
         mUpload.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
+            	ArrayList<File> files = null;
             	try{
             		ReceiptDbAdapter mDbHelper = new ReceiptDbAdapter(getApplicationContext());
             		mDbHelper.open();
-            		File file = mDbHelper.writeDataToFile();
+
+            		//File file = mDbHelper.writeDataToFile();
+            		files = mDbHelper.writeDataToFiles();
+            		
             		mDbHelper.close();
-            		SyncToDropbox upload = new SyncToDropbox(DropboxActivity.this, mApi, DATA_DIR, file);
-            		upload.execute();
+            		
+            		//SyncToDropbox upload = new SyncToDropbox(DropboxActivity.this, mApi, DATA_DIR, file);
+            		for (File file : files) {
+                		SyncToDropbox upload = new SyncToDropbox(DropboxActivity.this, mApi, DATA_DIR, file);
+                		upload.execute();
+            		}
+            		//upload.execute();
             		
             	}catch(IOException ex){
             		showToast("Failed to write to file");
             	}catch(IllegalArgumentException ex){
             		showToast("Database indexing error");
+            	} finally {
+
             	}
             }
         });

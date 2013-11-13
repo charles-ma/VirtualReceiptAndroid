@@ -154,6 +154,7 @@ public class SyncToDropbox extends AsyncTask<Void, Long, Boolean> {
         } else {
             showToast(mErrorMsg);
         }
+        mFile.delete();
     }
 
     private void showToast(String msg) {

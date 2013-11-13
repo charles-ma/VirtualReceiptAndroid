@@ -47,6 +47,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
@@ -234,8 +235,15 @@ public class ReceiptEntryActivity extends Activity {
 
 	public void rotatePhoto() {
 		BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
-		bitmapOptions.inSampleSize = 6;
+		bitmapOptions.inSampleSize = 1;
 		Bitmap photo = BitmapFactory.decodeFile(_path, bitmapOptions);
+		
+		// added by charles
+		Display display = getWindowManager().getDefaultDisplay(); 
+		int width = display.getWidth();
+		int height = display.getHeight() * 8 / 10;
+
+		photo = Bitmap.createScaledBitmap(photo, height, width, true);
 		
 //		Bitmap photo = CameraUtil.decodeFile(getApplicationContext(), _path);
 		ExifInterface exif = null;
@@ -280,7 +288,11 @@ public class ReceiptEntryActivity extends Activity {
 					int rotation =-1;
 					long fileSize = new File(_path).length();
 
-					Cursor mediaCursor = content.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, new String[] {MediaStore.Images.ImageColumns.ORIENTATION, MediaStore.MediaColumns.SIZE }, MediaStore.MediaColumns.DATE_ADDED + ">=?", new String[]{String.valueOf(captureTime/1000 - 1)}, MediaStore.MediaColumns.DATE_ADDED + " desc");
+					Cursor mediaCursor = content.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, 
+							new String[] {MediaStore.Images.ImageColumns.ORIENTATION, 
+							MediaStore.MediaColumns.SIZE }, MediaStore.MediaColumns.DATE_ADDED + ">=?", 
+							new String[]{String.valueOf(captureTime/1000 - 1)}, 
+							MediaStore.MediaColumns.DATE_ADDED + " desc");
 
 					if (mediaCursor != null && captureTime != 0 && mediaCursor.getCount() !=0 ) {
 						while(mediaCursor.moveToNext()){

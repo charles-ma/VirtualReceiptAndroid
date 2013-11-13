@@ -22,11 +22,14 @@ import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.widget.Toast;
 
@@ -116,8 +119,17 @@ public class ImageOCRActivity extends Activity {
 			Log.v(TAG, "Photo accepted. Converting to bitmap.");
 			try{
 				BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
-				bitmapOptions.inSampleSize = 6;
-				Bitmap photo = BitmapFactory.decodeFile(_path, bitmapOptions);	
+						
+				bitmapOptions.inSampleSize = 1;
+				Bitmap photo = BitmapFactory.decodeFile(_path, bitmapOptions);
+				
+				// added by charles, scale the bitmap to screen size
+				Display display = getWindowManager().getDefaultDisplay(); 
+				int width = display.getWidth();
+				int height = display.getHeight() * 8 / 10;
+
+				photo = Bitmap.createScaledBitmap(photo, height, width, true);
+				
 				ByteArrayOutputStream outputStream = new ByteArrayOutputStream(); 
 				photo.compress(CompressFormat.PNG, 0, outputStream);
 				photo.recycle();

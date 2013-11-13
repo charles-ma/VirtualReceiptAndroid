@@ -5,10 +5,12 @@
 package edu.upenn.cis599.eas499;
 
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -26,7 +28,6 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.Map.Entry;
-
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -479,6 +480,47 @@ public class ReceiptDbAdapter {
 	}
 	
 	/**
+	 * Added by charles ma
+	 * write the local database data into files and upload into dropbox 
+	 * @return array of the local copy of files
+	 * @throws IOException
+	 * @throws IllegalArgumentException
+	 */
+	public ArrayList<File> writeDataToFiles() throws IOException, IllegalArgumentException{
+		ArrayList<File> result = new ArrayList<File>();
+		
+		Cursor c = mDb.query(DATABASE_TABLE_RECEIPT, new String[] {KEY_ROWID, KEY_DESCRIPTION, KEY_AMOUNT, KEY_DATE, KEY_CATEGORY, KEY_PAYMENT, KEY_IMAGE}, null, null, null, null, null);
+		
+		File dataFile = writeDataToFile();
+		result.add(dataFile);
+				
+		if (c != null) {
+			if (c.moveToFirst()) {
+				do {
+					byte[] bitmapData = c.getBlob(c.getColumnIndexOrThrow(ReceiptDbAdapter.KEY_IMAGE));
+					String filename = c.getString(c.getColumnIndexOrThrow(ReceiptDbAdapter.KEY_DATE)) + ".jpg";
+					filename = filename.replace(" ", "");
+					filename = filename.replace("-", "");
+					filename = filename.replace(":", "");
+					
+					File file = new File(DATA_PATH + filename);
+					
+					FileOutputStream fw = new FileOutputStream(file.getAbsoluteFile());
+					BufferedOutputStream bw = new BufferedOutputStream(fw);
+					
+					bw.write(bitmapData);
+					bw.close();
+					result.add(file);
+				} while (c.moveToNext());
+			}
+		}
+		c.close();
+		Log.v("Database Write", "Finished writing to file");
+
+		return result;
+	}
+	
+	/**
 	 * synchronize the Database with the file downloaded from dropbox 
 	 * @return the number of entries newly inserted and deleted, respectively
 	 * @throws IOException
@@ -528,9 +570,10 @@ public class ReceiptDbAdapter {
 				addNewDatabaseEntry(currentLine);
 				result[0]++;
 			}else{
-				existingList.add(curDataMap.get(sCurrentLine));
+				//existingList.add(curDataMap.get(sCurrentLine));
 //				Log.v("existingList", ""+curDataMap.get(sCurrentLine));
 			}
+			existingList.add(curDataMap.get(sCurrentLine));
 		}
 		
 		for(int rowId : curDataMap.values()){
@@ -563,6 +606,12 @@ public class ReceiptDbAdapter {
 //		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 //		Date date = (Date)formatter.parse(fi.next());
 		String date = fi.next();
+		
+		//added by charles
+		String pFileName = date.replace(" ", "");
+		pFileName = pFileName.replace("-", "");
+		pFileName = pFileName.replace(":", "") + ".jpg";
+		
 		String category = fi.next();
 		int payment = (fi.hasNextInt()) ?fi.nextInt() : 0;
 		
