@@ -99,8 +99,8 @@
 	    <Button android:id="@+id/save"
 	        android:text="@string/save"
 	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:onClick="onSaveButtonClick" />
+	        android:layout_height="wrap_content"/>
+	        <!-- android:onClick="onSaveButtonClick" --> 
 	    
 	    <Button android:id="@+id/clear"
 	        android:text="@string/clear"
