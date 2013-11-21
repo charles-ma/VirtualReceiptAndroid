@@ -62,7 +62,7 @@ public class DropboxActivity extends Activity {
     final static private String ACCESS_KEY_NAME = "ACCESS_KEY";
     final static private String ACCESS_SECRET_NAME = "ACCESS_SECRET";
 
-
+    // public static by charles 11.20
     DropboxAPI<AndroidAuthSession> mApi;
 
 	private boolean mLoggedIn;
@@ -121,7 +121,7 @@ public class DropboxActivity extends Activity {
             		
             		//SyncToDropbox upload = new SyncToDropbox(DropboxActivity.this, mApi, DATA_DIR, file);
             		for (File file : files) {
-                		SyncToDropbox upload = new SyncToDropbox(DropboxActivity.this, mApi, DATA_DIR, file);
+                  		SyncToDropbox upload = new SyncToDropbox(DropboxActivity.this, mApi, DATA_DIR, file);
                 		upload.execute();
             		}
             		//upload.execute();
@@ -292,4 +292,5 @@ public class DropboxActivity extends Activity {
 
         return session;
     }
+    
 }

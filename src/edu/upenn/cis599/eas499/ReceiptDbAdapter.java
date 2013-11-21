@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.Map.Entry;
-
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -53,6 +53,9 @@ public class ReceiptDbAdapter {
     public static final String KEY_CATEGORY = "category";
     public static final String KEY_PAYMENT = "payment";
     public static final String KEY_IMAGE = "image";
+    
+    // added by charles 11.20
+    public static final String KEY_FLAG = "flag";
 
     private static final String TAG = "ReceiptDbAdapter";
     private DatabaseHelper mDbHelper;
@@ -62,8 +65,13 @@ public class ReceiptDbAdapter {
      * Database creation sql statement
      */
     
+    // commented out by charles 11.20
+    //private static final String DATABASE_CREATE_RECEIPT = "create table receipt (_id integer primary key autoincrement, " +
+      //  	"description text not null, amount real not null, date text not null, category text not null, payment integer not null, image blob);";
+    
+    // added by charles 11.20
     private static final String DATABASE_CREATE_RECEIPT = "create table receipt (_id integer primary key autoincrement, " +
-    	"description text not null, amount real not null, date text not null, category text not null, payment integer not null, image blob);";
+        	"description text not null, amount real not null, date text not null, category text not null, payment integer not null, image blob, flag integer not null);";
 
     private static final String DATABASE_NAME = "data";
     private static final String DATABASE_TABLE_RECEIPT = "receipt";
@@ -124,7 +132,8 @@ public class ReceiptDbAdapter {
      * 
      * @return rowId or -1 if failed
      */
-    public long createReceipt(String description, double amount, Date date, String category, int payment, byte[] image) {
+    @SuppressLint("SimpleDateFormat")
+	public long createReceipt(String description, double amount, Date date, String category, int payment, byte[] image, boolean flag) {
     	ContentValues initialValues = new ContentValues();
     	initialValues.put(KEY_DESCRIPTION, description);
     	initialValues.put(KEY_AMOUNT, amount);
@@ -132,6 +141,9 @@ public class ReceiptDbAdapter {
     	initialValues.put(KEY_CATEGORY, category);
     	initialValues.put(KEY_PAYMENT, payment);
     	initialValues.put(KEY_IMAGE, image);
+    	
+    	//added by charles 11.20
+    	initialValues.put(KEY_FLAG, flag ? 1 : 0);
     	
     	return mDb.insert(DATABASE_TABLE_RECEIPT, null, initialValues);
     }
@@ -152,7 +164,9 @@ public class ReceiptDbAdapter {
      * @return Cursor over all receipts
      */
     public Cursor fetchAllReceipts() {
-    	return mDb.query(DATABASE_TABLE_RECEIPT, new String[] {KEY_ROWID, KEY_DESCRIPTION, KEY_AMOUNT, KEY_DATE, KEY_CATEGORY, KEY_PAYMENT, KEY_IMAGE}, null, null, null, null, null);
+    	// commented out by charles 11.20
+    	//return mDb.query(DATABASE_TABLE_RECEIPT, new String[] {KEY_ROWID, KEY_DESCRIPTION, KEY_AMOUNT, KEY_DATE, KEY_CATEGORY, KEY_PAYMENT, KEY_IMAGE}, null, null, null, null, null);
+    	return mDb.query(DATABASE_TABLE_RECEIPT, new String[] {KEY_ROWID, KEY_DESCRIPTION, KEY_AMOUNT, KEY_DATE, KEY_CATEGORY, KEY_PAYMENT, KEY_IMAGE, KEY_FLAG}, null, null, null, null, null);
     }
     
     /**
@@ -163,7 +177,17 @@ public class ReceiptDbAdapter {
      * @throws SQLException if note could not be found/retreived
      */
     public Cursor fetchReceipt(long rowId) throws SQLException {
-    	Cursor mCursor = mDb.rawQuery("select _id, description, amount, strftime(\'%m-%d-%Y\', date) date, category, payment, image from Receipt where _id = \'" + rowId + "'", null);
+    	Cursor mCursor = mDb.rawQuery("select _id, description, amount, strftime(\'%m-%d-%Y\', date) date, category, payment, image, flag from Receipt where _id = \'" + rowId + "'", null);
+    	//Cursor mCursor = mDb.query(true, DATABASE_TABLE_RECEIPT, new String[] {KEY_ROWID, KEY_DESCRIPTION, KEY_AMOUNT, KEY_DATE, KEY_CATEGORY, KEY_PAYMENT, KEY_IMAGE}, KEY_ROWID + "=" + rowId, null, null, null, null, null);
+    	if (mCursor != null) {
+    		mCursor.moveToFirst();
+    	}
+    	return mCursor;
+    }
+    
+    // added by charles 11.21
+    public Cursor fetchReceiptFullDate(long rowId) throws SQLException {
+    	Cursor mCursor = mDb.rawQuery("select _id, description, amount, date, category, payment, image, flag from Receipt where _id = \'" + rowId + "'", null);
     	//Cursor mCursor = mDb.query(true, DATABASE_TABLE_RECEIPT, new String[] {KEY_ROWID, KEY_DESCRIPTION, KEY_AMOUNT, KEY_DATE, KEY_CATEGORY, KEY_PAYMENT, KEY_IMAGE}, KEY_ROWID + "=" + rowId, null, null, null, null, null);
     	if (mCursor != null) {
     		mCursor.moveToFirst();
@@ -178,7 +202,7 @@ public class ReceiptDbAdapter {
      * @param name value to set receipt name to
      * @return true if the receipt was successfully updated, false otherwise
      */
-    public boolean updateReceipt(long rowId, String description, double amount, Date date, String category, int payment, byte[] image) {
+    public boolean updateReceipt(long rowId, String description, double amount, Date date, String category, int payment, byte[] image, boolean flag) {
     	ContentValues args = new ContentValues();
     	args.put(KEY_DESCRIPTION, description);
     	args.put(KEY_AMOUNT, amount);
@@ -186,6 +210,8 @@ public class ReceiptDbAdapter {
     	args.put(KEY_CATEGORY, category);
     	args.put(KEY_PAYMENT, payment);
     	args.put(KEY_IMAGE, image);
+    	// added by charles 11.20
+    	args.put(KEY_FLAG, flag ? 1 : 0);
     	return mDb.update(DATABASE_TABLE_RECEIPT, args, KEY_ROWID + "=" + rowId, null) > 0;
     }
     
